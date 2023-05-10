@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+
+import '../utils/connection_checker/connection_checker.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,14 +14,24 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late final StreamSubscription<InternetConnectionStatus> listener;
   @override
   void initState() {
-    Timer(
-      const Duration(milliseconds: 5000),
-      () {
+    listener = InternetConnectionChecker().onStatusChange.listen((status) {
+      final notifier = ConnectionNotifier.of(context);
+      notifier.value =
+          status == InternetConnectionStatus.connected ? true : false;
+      if (notifier.value) {
         Navigator.popAndPushNamed(context, '/home');
-      },
-    );
+      }
+    });
+
+    // Timer(
+    //   const Duration(milliseconds: 3000),
+    //   () {
+    //     Navigator.popAndPushNamed(context, '/home');
+    //   },
+    // );
     super.initState();
   }
 
