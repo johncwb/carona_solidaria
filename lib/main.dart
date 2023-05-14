@@ -1,17 +1,35 @@
+import 'dart:js';
+
 import 'package:carona_solidaria/home/home_screen.dart';
+import 'package:carona_solidaria/services/auth_service.dart';
 import 'package:carona_solidaria/splash/splash_screen.dart';
 import 'package:carona_solidaria/utils/connection_checker/connection_checker.dart';
 import 'package:carona_solidaria/utils/no_connection.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   final hasConnection = await InternetConnectionChecker().hasConnection;
+  await Firebase.initializeApp();
+
   runApp(
-    ConnectionNotifier(
-      notifier: ValueNotifier(hasConnection),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: ((context) => AuthServices()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ValueNotifier(hasConnection),
+        ),
+      ],
       child: const MyApp(),
     ),
+    // ConnectionNotifier(
+    //   notifier: ValueNotifier(hasConnection),
+    //   child: const MyApp(),
+    // ),
   );
 }
 
