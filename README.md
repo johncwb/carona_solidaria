@@ -1,9 +1,11 @@
 # carona_solidaria
-TCC realizado com a ajuda de
 
--Gabriel Gebara
--David Schultz
--João Vitor
+TCC realizado pela equipe:
+
+- Gabriel Gebara
+- David Schultz
+- João Paulo Thimotheo
+- João Vitor da Silva
 
 
 **O aplicativo será um app de carona, para ajudar as pessoas que moram longe da faculdade e que chegam em casa muito tarde, a ideia do app é o usuário entrar com sua conta do google e depois sinalizar se ele vai ser o motorista ou o caroneiro.** 
