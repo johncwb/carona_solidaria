@@ -2,12 +2,14 @@ import 'package:carona_solidaria/home/home_screen.dart';
 import 'package:carona_solidaria/services/auth_service.dart';
 import 'package:carona_solidaria/splash/splash_screen.dart';
 import 'package:carona_solidaria/utils/no_connection.dart';
+import 'package:carona_solidaria/widgets/auth_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final hasConnection = await InternetConnectionChecker().hasConnection;
   await Firebase.initializeApp();
 
@@ -37,10 +39,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Carona Solidária',
+      initialRoute: '/',
       routes: {
         '/': (context) => const SplashScreen(),
         '/home': (context) => const HomeScreen(),
         '/noConnection': (context) => const NoConnection(),
+        '/authCheck': (context) => const AuthCheck(),
       },
     );
   }
