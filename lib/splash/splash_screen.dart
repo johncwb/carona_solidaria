@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-import '../home/home_screen.dart';
-
 // import '../utils/connection_checker/connection_checker.dart';
 
 class SplashScreen extends StatefulWidget {

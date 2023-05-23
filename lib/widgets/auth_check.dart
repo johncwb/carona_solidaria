@@ -20,9 +20,10 @@ class _AuthCheckState extends State<AuthCheck> {
     if (auth.isLoading) {
       return loading();
     } else if (auth.usuario == null) {
-      return LoginScreen();
-    } else
-      HomeScreen();
+      return const LoginScreen();
+    } else {
+      const HomeScreen();
+    }
     return Container();
   }
 
