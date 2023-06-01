@@ -1,5 +1,6 @@
+import 'package:carona_solidaria/profile/profileSceen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,15 +13,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xff113d63),
-        title: Text(
-          "Olá, Aluno",
-          style: GoogleFonts.anton(
-            color: Colors.white,
-          ),
-        ),
+      body: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            return const ProfileScreen();
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Desculpe, algo deu errado! :()'),
+            );
+          } else {
+            return Container();
+          }
+        }),
       ),
     );
   }

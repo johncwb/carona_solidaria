@@ -1,4 +1,4 @@
-import 'package:carona_solidaria/widgets/button_widget.dart';
+import 'package:carona_solidaria/login/widgets/TextFormWidget.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,6 +9,38 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+  final email = TextEditingController();
+  final password = TextEditingController();
+
+  bool isLogin = true;
+  late String title;
+  late String actionButton;
+  late String toggleButton;
+
+  @override
+  void initState() {
+    super.initState();
+    setFormAction(true);
+  }
+
+  setFormAction(bool action) {
+    setState(
+      () {
+        isLogin = action;
+        if (isLogin) {
+          title = "Bem Vindo";
+          actionButton = 'Login';
+          toggleButton = 'Ainda não tem conta? Cadastre-se agora.';
+        } else {
+          title = "Crie sua conta";
+          actionButton = 'Cadastrar';
+          toggleButton = 'Voltar ao Login.';
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,39 +49,54 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildBody() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-
-        children: [
-          _buildLogo(),
-          const SizedBox(height: 100),
-          _buildLoginButton(),
-          const SizedBox(height: 20),
-          _buildRegisterButton(),
-          const SizedBox(height: 20),
-          _buildguestButton(),
-        ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                _buildEmail(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildLogo() {
-    return Image.asset(
-      "assets/images/image_logo.png",
-      color: const Color(0xff113d63),
+  Widget _buildEmail() {
+    return TextFormWidget(
+      label: 'E-mail',
+      hint: 'E-mail',
+      controller: email,
+      keyboardType: TextInputType.emailAddress,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Preencha seu email corretamente';
+        }
+        return null;
+      },
     );
   }
 
-  Widget _buildLoginButton() {
-    return const ButtonWidgets(text: "Login ");
-  }
-
-  Widget _buildRegisterButton() {
-    return const ButtonWidgets(text: "Registrar");
-  }
-
-  Widget _buildguestButton() {
-    return const Text("Entrar como convidado");
+  Widget _buildPassword() {
+    return TextFormWidget(
+      label: 'Senha',
+      hint: 'Senha',
+      controller: password,
+      keyboardType: TextInputType.text,
+      validator: (value) {},
+    );
   }
 }

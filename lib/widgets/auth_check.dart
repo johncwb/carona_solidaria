@@ -1,9 +1,8 @@
 import 'package:carona_solidaria/home/home_screen.dart';
+import 'package:carona_solidaria/landing/landing_screen.dart';
 import 'package:carona_solidaria/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../login/login_screen.dart';
 
 class AuthCheck extends StatefulWidget {
   const AuthCheck({super.key});
@@ -20,7 +19,7 @@ class _AuthCheckState extends State<AuthCheck> {
     if (auth.isLoading) {
       return loading();
     } else if (auth.usuario == null) {
-      return const LoginScreen();
+      return const LandingScreen();
     } else {
       const HomeScreen();
     }
