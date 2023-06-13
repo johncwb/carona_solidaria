@@ -5,6 +5,7 @@ import 'package:carona_solidaria/widgets/auth_check.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // import '../utils/connection_checker/connection_checker.dart';
 
@@ -21,12 +22,18 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: ((context) => const AuthCheck()),
-        ),
-      );
+      final user = FirebaseAuth.instance.currentUser!;
+      if (user != null) {
+        debugPrint(user.displayName);
+      } else {
+        debugPrint("Precisa do login!");
+      }
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: ((context) => const AuthCheck()),
+      //   ),
+      // );
     });
 
     // listener = InternetConnectionChecker().onStatusChange.listen(
@@ -77,7 +84,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget _buildIconRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [Image.asset("assets/images/image_logo.png")],
+      children: [
+        Image.asset(
+          "assets/images/image_logo.png",
+          color: Colors.white,
+        )
+      ],
     );
   }
 

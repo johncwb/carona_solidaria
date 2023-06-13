@@ -1,4 +1,3 @@
-import 'package:carona_solidaria/login/login_screen.dart';
 import 'package:carona_solidaria/provider/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -65,6 +64,4 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget _buildguestButton() {
     return const Text("Entrar como convidado");
   }
-
-  _loginButtonFunction() {}
 }

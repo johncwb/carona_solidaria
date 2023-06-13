@@ -12,6 +12,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final user = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
+    debugPrint("Bem Vindo\n ${user.displayName}");
     return Scaffold(
       body: _bemVindo(),
     );

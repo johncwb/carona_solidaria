@@ -89,14 +89,4 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
   }
-
-  Widget _buildPassword() {
-    return TextFormWidget(
-      label: 'Senha',
-      hint: 'Senha',
-      controller: password,
-      keyboardType: TextInputType.text,
-      validator: (value) {},
-    );
-  }
 }

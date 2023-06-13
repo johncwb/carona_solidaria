@@ -1,8 +1,8 @@
 import 'package:carona_solidaria/home/home_screen.dart';
-import 'package:carona_solidaria/landing/landing_screen.dart';
-import 'package:carona_solidaria/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+import '../profile/profileSceen.dart';
 
 class AuthCheck extends StatefulWidget {
   const AuthCheck({super.key});
@@ -14,22 +14,37 @@ class AuthCheck extends StatefulWidget {
 class _AuthCheckState extends State<AuthCheck> {
   @override
   Widget build(BuildContext context) {
-    AuthServices auth = Provider.of<AuthServices>(context);
-
-    if (auth.isLoading) {
-      return loading();
-    } else if (auth.usuario == null) {
-      return const LandingScreen();
-    } else {
-      const HomeScreen();
-    }
-    return Container();
-  }
-
-  Widget loading() {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
+    return Scaffold(
+      body: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            debugPrint("Loading...");
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            debugPrint("Load data sucessful!!");
+            debugPrint("Name: ${snapshot.data!.displayName}");
+            debugPrint("E-mail: ${snapshot.data!.email}");
+            return const HomeScreen();
+          } else if (snapshot.hasError) {
+            debugPrint("Error on load data!");
+            return const Center(
+              child: Text(
+                'Desculpe, algo deu errado! :(',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            );
+          } else {
+            debugPrint("Tamo aqui caralho");
+            return Container(
+              height: 50,
+              width: 50,
+              color: Colors.amber,
+            );
+          }
+        }),
       ),
     );
   }

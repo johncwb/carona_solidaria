@@ -10,24 +10,39 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final user = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: ((context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
-            return const ProfileScreen();
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Desculpe, algo deu errado! :()'),
-            );
-          } else {
-            return Container();
-          }
-        }),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color(0xff113d63),
+        title: InkWell(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: ((context) => const ProfileScreen()),
+            ),
+          ),
+          child: ListTile(
+            title: _buildTitle(),
+            leading: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(user.photoURL!),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitle() {
+    return Text(
+      "Olá, ${user.displayName}",
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
       ),
     );
   }
