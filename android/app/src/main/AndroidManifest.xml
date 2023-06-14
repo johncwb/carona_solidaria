@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.carona_solidaria">
    <application
-        android:label="carona_solidaria"
+        android:label="Carona Solidária"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
