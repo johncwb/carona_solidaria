@@ -1,6 +1,7 @@
 import 'dart:async';
 
 // import 'package:carona_solidaria/utils/no_connection.dart';
+import 'package:carona_solidaria/register/registerScreen.dart';
 import 'package:carona_solidaria/widgets/auth_check.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,15 +26,21 @@ class _SplashScreenState extends State<SplashScreen> {
       final user = FirebaseAuth.instance.currentUser!;
       if (user != null) {
         debugPrint(user.displayName);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: ((context) => const AuthCheck()),
+          ),
+        );
       } else {
         debugPrint("Precisa do login!");
       }
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: ((context) => const AuthCheck()),
-      //   ),
-      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: ((context) => const RegisterScreen()),
+        ),
+      );
     });
 
     // listener = InternetConnectionChecker().onStatusChange.listen(
@@ -65,16 +72,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff113d63),
+      // backgroundColor: const Color(0xff113d63),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _buildIconRow(),
             const SizedBox(height: 20),
-            _buildTitle(),
-            const SizedBox(height: 15),
-            _buildSubtitle(),
+            // _buildTitle(),
+            // const SizedBox(height: 15),
+            // _buildSubtitle(),
           ],
         ),
       ),
@@ -86,8 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset(
-          "assets/images/image_logo.png",
-          color: Colors.white,
+          "assets/images/logo_completa.png",
         )
       ],
     );
@@ -97,7 +103,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Text(
       "Carona Solidária",
       style: GoogleFonts.anton(
-        color: Colors.white,
+        color: const Color(0xff113d63),
         fontSize: 42,
       ),
     );
@@ -107,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Text(
       "Universidade Tuiuti do Paraná",
       style: GoogleFonts.anton(
-        color: Colors.white,
+        color: const Color(0xff113d63),
         fontWeight: FontWeight.w300,
       ),
     );
