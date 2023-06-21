@@ -23,7 +23,7 @@ class _AuthCheckState extends State<AuthCheck> {
             debugPrint("Load data sucessful!!");
             debugPrint("Name: ${snapshot.data!.displayName}");
             debugPrint("E-mail: ${snapshot.data!.email}");
-            return const HomeScreen();
+            return const HomeScreen(isUser: true);
           } else if (snapshot.hasError) {
             debugPrint("Error on load data!");
             return const Center(

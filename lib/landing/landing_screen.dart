@@ -1,4 +1,5 @@
 import 'package:carona_solidaria/provider/google_sign_in.dart';
+import 'package:carona_solidaria/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -58,14 +59,32 @@ class _LandingScreenState extends State<LandingScreen> {
     return ButtonWidgets(
       text: "Registrar",
       function: () {
-        final provider =
-            Provider.of<GoogleSignInProvider>(context, listen: false);
-        provider.googleRegister();
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/register',
+          (route) => false,
+        );
       },
     );
   }
 
   Widget _buildguestButton() {
-    return const Text("Entrar como convidado");
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home',
+          (route) => false,
+        );
+      },
+      child: const Text(
+        "Entrar como convidado",
+        style: TextStyle(
+          color: AppConstants.primaryColor,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
   }
 }
