@@ -1,11 +1,12 @@
 import 'dart:async';
 
 // import 'package:carona_solidaria/utils/no_connection.dart';
-import 'package:carona_solidaria/register/registerScreen.dart';
 import 'package:carona_solidaria/widgets/auth_check.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../landing/landing_screen.dart';
 
 // import '../utils/connection_checker/connection_checker.dart';
 
@@ -21,29 +22,36 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     Timer(const Duration(seconds: 3), () {
-      final user = FirebaseAuth.instance.currentUser!;
-
-      // ignore: unnecessary_null_comparison
-      if (user != null) {
-        debugPrint(user.uid);
-
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: ((context) => const AuthCheck()),
-        //   ),
-        // );
-      } else {
-        debugPrint("Precisa do login!");
-      }
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: ((context) => const RegisterScreen()),
-      //   ),
-      // );
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/register',
+        (route) => false,
+      );
     });
+
+    // final user = FirebaseAuth.instance.currentUser!;
+    // Timer(const Duration(seconds: 3), () {
+    //   // ignore: unnecessary_null_comparison
+    //   if (user != null) {
+    //     debugPrint(user.uid);
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: ((context) => const AuthCheck()),
+    //       ),
+    //     );
+    //   } else {
+    //     debugPrint("Precisa do login!");
+    //   }
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: ((context) => const LandingScreen()),
+    //     ),
+    //   );
+    // });
   }
 
   @override

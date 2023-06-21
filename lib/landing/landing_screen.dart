@@ -57,7 +57,11 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget _buildRegisterButton() {
     return ButtonWidgets(
       text: "Registrar",
-      function: () {},
+      function: () {
+        final provider =
+            Provider.of<GoogleSignInProvider>(context, listen: false);
+        provider.googleRegister();
+      },
     );
   }
 

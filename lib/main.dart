@@ -11,6 +11,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 
 import 'landing/landing_screen.dart';
+import 'register/register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +53,8 @@ class MyApp extends StatelessWidget {
           '/noConnection': (context) => const NoConnection(),
           '/authCheck': (context) => const AuthCheck(),
           '/landing': (context) => const LandingScreen(),
-          '/login': (context) => const LoginScreen()
+          '/login': (context) => const LoginScreen(),
+          '/register': (context) => const RegisterScreen(),
         },
       ),
     );
