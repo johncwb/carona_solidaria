@@ -1,10 +1,15 @@
+import 'package:carona_solidaria/home/widgets/card_carona.dart';
 import 'package:carona_solidaria/profile/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/constants.dart';
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.isUser});
+  const HomeScreen(
+      {super.key, required this.isUser, required this.isMotorista});
   final bool isUser;
+  final bool isMotorista;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -17,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xff113d63),
+        backgroundColor: AppConstants.primaryColor,
         title: InkWell(
           onTap: () => widget.isUser
               ? Navigator.push(
@@ -30,6 +35,16 @@ class _HomeScreenState extends State<HomeScreen> {
           child: widget.isUser ? _buildListTileLogged() : _buildListTileGuest(),
         ),
       ),
+      body: widget.isUser ? _buildBody() : Container(),
+    );
+  }
+
+  Widget _buildBody() {
+    return ListView(
+      padding: const EdgeInsets.all(12.0),
+      children: const [
+        CardCarona(isGuest: false),
+      ],
     );
   }
 

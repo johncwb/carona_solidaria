@@ -49,7 +49,10 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const SplashScreen(),
-          '/home': (context) => const HomeScreen(isUser: false),
+          '/home': (context) => const HomeScreen(
+                isUser: false,
+                isMotorista: true,
+              ),
           '/noConnection': (context) => const NoConnection(),
           '/authCheck': (context) => const AuthCheck(),
           '/landing': (context) => const LandingScreen(),
