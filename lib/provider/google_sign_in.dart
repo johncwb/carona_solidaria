@@ -14,6 +14,27 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+  Future createTrip(
+    String name,
+    String destiny,
+    String meetingPoint,
+    String phone,
+  ) async {
+    Map<String, dynamic> data = {
+      'name': name,
+      'destiny': destiny,
+      'meetinPoint': meetingPoint,
+      'phone': phone,
+    };
+    db
+        .collection('trips')
+        .doc()
+        .set(data)
+        .then((value) => debugPrint("Dados adicionados com sucesso!"))
+        .catchError(
+            (error) => debugPrint("Erro ao adicionar os dados: $error"));
+  }
+
   //Função para fazer o login com o google
   Future googleLogin() async {
     //capturando dados do login

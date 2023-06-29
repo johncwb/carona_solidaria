@@ -1,6 +1,7 @@
 import 'package:carona_solidaria/home/widgets/card_carona.dart';
 import 'package:carona_solidaria/landing/landing_screen.dart';
 import 'package:carona_solidaria/profile/profile_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -22,14 +23,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final user = FirebaseAuth.instance.currentUser;
+  late final feed = FirebaseFirestore.instance.collection('trips');
 
   @override
   Widget build(BuildContext context) {
-    // final arguments =
-    //     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    // final isUser = arguments['isUser'] ?? true;
-    // final isDriver = arguments['isDriver'] ?? true;
     return Scaffold(
+      floatingActionButton: widget.isDriver!
+          ? Container()
+          : FloatingActionButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/createTrip');
+              },
+              backgroundColor: AppConstants.primaryColor,
+              child: const Icon(Icons.add),
+            ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: AppConstants.primaryColor,
@@ -50,16 +57,42 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody() {
-    return ListView(
-      padding: const EdgeInsets.all(12.0),
-      children: const [
-        CardCarona(isGuest: false),
-        CardCarona(isGuest: false),
-        CardCarona(isGuest: false),
-        CardCarona(isGuest: false),
-        CardCarona(isGuest: false),
-      ],
-    );
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance.collection('trips').snapshots(),
+        builder: (BuildContext context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.hasError) {
+            return Text("ocorreu um erro");
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: ((context, index) {
+              DocumentSnapshot<Map<String, dynamic>> document =
+                  snapshot.data!.docs[index];
+              Map<String, dynamic> data = document.data()!;
+              return CardCarona(
+                isGuest: false,
+                name: data['name'],
+                destiny: data['destiny'],
+                meeting: data['meetinPoint'],
+              );
+            }),
+          );
+        });
+    // return ListView(
+    //   padding: const EdgeInsets.all(12.0),
+    //   children: const [
+    //     CardCarona(isGuest: false),
+    //     CardCarona(isGuest: false),
+    //     CardCarona(isGuest: false),
+    //     CardCarona(isGuest: false),
+    //     CardCarona(isGuest: false),
+    //   ],
+    // );
   }
 
   Widget _buildListTileLogged() {

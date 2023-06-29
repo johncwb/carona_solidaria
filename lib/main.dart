@@ -1,3 +1,4 @@
+import 'package:carona_solidaria/create_trip/create_trip.dart';
 import 'package:carona_solidaria/home/home_screen.dart';
 import 'package:carona_solidaria/login/login_screen.dart';
 import 'package:carona_solidaria/provider/google_sign_in.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
           '/landing': (context) => const LandingScreen(),
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
+          '/createTrip': (context) => const CreateTrip(),
         },
       ),
     );

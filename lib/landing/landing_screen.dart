@@ -101,29 +101,29 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  Widget _buildRegisterButton() {
-    return ButtonWidgets(
-      text: "Registrar",
-      function: () async {
-        final provider =
-            Provider.of<GoogleSignInProvider>(context, listen: false);
-        var userGoogle = provider.userGoogle!.id;
-        var val = await provider.checkCollectionExisting(userGoogle);
-        var register = provider.googleLogin();
-        if (!val) {
-          register.whenComplete(() {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/register',
-              (route) => false,
-            );
-          });
-        }
+  // Widget _buildRegisterButton() {
+  //   return ButtonWidgets(
+  //     text: "Registrar",
+  //     function: () async {
+  //       final provider =
+  //           Provider.of<GoogleSignInProvider>(context, listen: false);
+  //       var userGoogle = provider.userGoogle!.id;
+  //       var val = await provider.checkCollectionExisting(userGoogle);
+  //       var register = provider.googleLogin();
+  //       if (!val) {
+  //         register.whenComplete(() {
+  //           Navigator.pushNamedAndRemoveUntil(
+  //             context,
+  //             '/register',
+  //             (route) => false,
+  //           );
+  //         });
+  //       }
 
-        // provider.googleRegister(() {});
-      },
-    );
-  }
+  //       // provider.googleRegister(() {});
+  //     },
+  //   );
+  // }
 
   Widget _buildguestButton() {
     return InkWell(

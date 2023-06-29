@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CardCarona extends StatelessWidget {
-  const CardCarona({super.key, required this.isGuest});
+  const CardCarona(
+      {super.key,
+      required this.isGuest,
+      required this.name,
+      required this.destiny,
+      required this.meeting});
+  final String name;
+  final String destiny;
+  final String meeting;
 
   final bool isGuest;
 
@@ -34,11 +42,11 @@ class CardCarona extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildName("Pedro Almeida"),
+          _buildName(name),
           const SizedBox(height: 10),
           _buildStarsRate(),
           const SizedBox(height: 10),
-          _buildLocation("R. Buenos Aires, 1260 - Água Verde"),
+          _buildLocation(destiny),
         ],
       ),
     );
