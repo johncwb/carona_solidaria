@@ -1,7 +1,9 @@
 import 'package:carona_solidaria/utils/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_star_rating/simple_star_rating.dart';
 
 import '../provider/google_sign_in.dart';
 import 'widgets/edit_profile_button.dart';
@@ -14,7 +16,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final user = FirebaseAuth.instance.currentUser!;
+  late final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Bem Vindo\n ${user.displayName}");
@@ -48,6 +51,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   radius: 60,
                   backgroundImage: NetworkImage(user.photoURL!),
                 ),
+                const SizedBox(height: 15),
+                _ratingStar(),
                 const SizedBox(height: 15),
                 _buildInfo("Nome: ", "${user.displayName}"),
                 const SizedBox(height: 15),
@@ -117,5 +122,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     });
+  }
+
+  Widget _ratingStar() {
+    return SimpleStarRating(
+      allowHalfRating: true,
+      starCount: 5,
+      rating: 4.5,
+      isReadOnly: true,
+    );
   }
 }

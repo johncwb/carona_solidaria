@@ -32,7 +32,7 @@ class _LandingScreenState extends State<LandingScreen> {
           const SizedBox(height: 100),
           _buildLoginButton(),
           const SizedBox(height: 20),
-          _buildRegisterButton(),
+          // _buildRegisterButton(),
           const SizedBox(height: 20),
           _buildguestButton(),
         ],
@@ -104,16 +104,23 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget _buildRegisterButton() {
     return ButtonWidgets(
       text: "Registrar",
-      function: () {
+      function: () async {
         final provider =
             Provider.of<GoogleSignInProvider>(context, listen: false);
-        provider.googleRegister(() {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/register',
-            (route) => false,
-          );
-        });
+        var userGoogle = provider.userGoogle!.id;
+        var val = await provider.checkCollectionExisting(userGoogle);
+        var register = provider.googleLogin();
+        if (!val) {
+          register.whenComplete(() {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/register',
+              (route) => false,
+            );
+          });
+        }
+
+        // provider.googleRegister(() {});
       },
     );
   }

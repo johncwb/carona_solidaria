@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../home/home_screen.dart';
+import '../provider/google_sign_in.dart';
 import '../utils/constants.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -136,7 +139,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildRegisterButton() {
+    bool? isDriver;
+    if (_selections[0]) {
+      isDriver = true;
+    } else {
+      isDriver = false;
+    }
     return InkWell(
+      onTap: () {
+        final provider =
+            Provider.of<GoogleSignInProvider>(context, listen: false);
+        var saveUser = provider.saveUser(isDriver!);
+        saveUser.whenComplete(() {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(
+                  isDriver: isDriver,
+                  isUser: true,
+                ),
+              ),
+              (route) => false);
+        });
+      },
       child: Container(
         width: 275,
         height: 50,
@@ -150,7 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         child: const Center(
           child: Text(
-            "Salvar!",
+            "Salvar",
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
