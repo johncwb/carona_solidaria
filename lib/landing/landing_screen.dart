@@ -53,9 +53,28 @@ class _LandingScreenState extends State<LandingScreen> {
       function: () async {
         final provider =
             Provider.of<GoogleSignInProvider>(context, listen: false);
-        var login = provider.googleLogin();
+        provider.signInWithGoogle().then((userCredential) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/register', (route) => false);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(
+                  isDriver: false,
+                  isUser: true,
+                ),
+              ),
+              (route) => false);
+        }).catchError((e) {
+          // Login falhou, exiba uma mensagem de erro
+          print(e);
+        });
+
+        // final provider =
+        //     Provider.of<GoogleSignInProvider>(context, listen: false);
+        // var login = await provider.signInWithGoogle();
         var userGoogle = provider.userGoogle!.id;
-        var val = await provider.checkCollectionExisting(userGoogle);
+        // var val = await provider.checkCollectionExisting(userGoogle);
         var collection = provider.db.collection('users');
         var doc = collection.doc(userGoogle);
         var getDoc = doc.get();
@@ -66,39 +85,56 @@ class _LandingScreenState extends State<LandingScreen> {
             Map<String, dynamic> data = snapshot.data()!;
             nome = data['name'];
             isDriver = data['isDriver'];
-            debugPrint("Nome: $nome\nisDriver: $isDriver");
           }
         });
 
-        if (val) {
-          login.whenComplete(() {
-            final user = provider.user;
-            bool isUser = false;
-            if (user.id.isNotEmpty) {
-              isUser = true;
-            }
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/register', (route) => false);
-            // Navigator.pushAndRemoveUntil(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => HomeScreen(
-            //         isDriver: isDriver,
-            //         isUser: isUser,
-            //       ),
-            //     ),
-            //     (route) => false);
-          });
-        } else {
-          login.whenComplete(() {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const RegisterScreen(),
-                ),
-                (route) => false);
-          });
-        }
+        // login.whenComplete(() {
+        //   final user = provider.user;
+        //   bool isUser = false;
+        //   if (user.id.isNotEmpty) {
+        //     isUser = true;
+        //   }
+        //   Navigator.pushNamedAndRemoveUntil(
+        //       context, '/register', (route) => false);
+        //   Navigator.pushAndRemoveUntil(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => HomeScreen(
+        //           isDriver: isDriver,
+        //           isUser: isUser,
+        //         ),
+        //       ),
+        //       (route) => false);
+        // });
+        // if (val) {
+        //   login.whenComplete(() {
+        //     final user = provider.user;
+        //     bool isUser = false;
+        //     if (user.id.isNotEmpty) {
+        //       isUser = true;
+        //     }
+        //     Navigator.pushNamedAndRemoveUntil(
+        //         context, '/register', (route) => false);
+        //     // Navigator.pushAndRemoveUntil(
+        //     //     context,
+        //     //     MaterialPageRoute(
+        //     //       builder: (context) => HomeScreen(
+        //     //         isDriver: isDriver,
+        //     //         isUser: isUser,
+        //     //       ),
+        //     //     ),
+        //     //     (route) => false);
+        //   });
+        // } else {
+        //   login.whenComplete(() {
+        //     Navigator.pushAndRemoveUntil(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => const RegisterScreen(),
+        //         ),
+        //         (route) => false);
+        //   });
+        // }
       },
     );
   }

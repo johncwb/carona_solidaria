@@ -13,6 +13,31 @@ class GoogleSignInProvider extends ChangeNotifier {
   GoogleSignInAccount get user => userGoogle!;
 
   FirebaseFirestore db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser!.authentication;
+    final OAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    Map<String, dynamic> data = {
+      'id': userGoogle?.id,
+      'name': userGoogle?.displayName,
+      'isDriver': false,
+    };
+    db
+        .collection('users')
+        .doc(googleUser.id)
+        .set(data)
+        .then((value) => debugPrint("Dados adicionados com sucesso!"))
+        .catchError(
+            (error) => debugPrint("Erro ao adicionar os dados: $error"));
+    return await _auth.signInWithCredential(credential);
+  }
 
   Future createTrip(
     String name,
@@ -67,42 +92,35 @@ class GoogleSignInProvider extends ChangeNotifier {
     await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future googleRegister(Function? fun) async {
+  Future googleRegister() async {
+//capturando dados do login
     final googleUser = await googleSignIn.signIn();
+    if (googleUser == null) return;
+    userGoogle = googleUser;
 
-    bool exists = await checkCollectionExisting(googleUser!.id);
-    if (exists) {
-      fun!();
-    } else {
-      //capturando dados do login
-      final googleUser = await googleSignIn.signIn();
-      if (googleUser == null) return;
-      userGoogle = googleUser;
+    final googleAuth = await googleUser.authentication;
 
-      final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+    debugPrint("googleUserId: ${googleUser.id}");
+    Map<String, dynamic> data = {
+      'id': userGoogle?.id,
+      'name': userGoogle?.displayName,
+      'isDriver': false,
+    };
 
-      debugPrint("googleUserId: ${googleUser.id}");
-      Map<String, dynamic> data = {
-        'id': userGoogle?.id,
-        'name': userGoogle?.displayName,
-        'isDriver': false,
-      };
+    db
+        .collection('users')
+        .doc(googleUser.id)
+        .set(data)
+        .then((value) => debugPrint("Dados adicionados com sucesso!"))
+        .catchError(
+            (error) => debugPrint("Erro ao adicionar os dados: $error"));
 
-      db
-          .collection('users')
-          .doc(googleUser.id)
-          .set(data)
-          .then((value) => debugPrint("Dados adicionados com sucesso!"))
-          .catchError(
-              (error) => debugPrint("Erro ao adicionar os dados: $error"));
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
-    }
+    await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future googleLogOut() async {
