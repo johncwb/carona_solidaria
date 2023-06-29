@@ -10,11 +10,13 @@ class CardCarona extends StatelessWidget {
     required this.destiny,
     required this.meeting,
     required this.whatsapp,
+    required this.meetingPoint,
   });
   final String name;
   final String destiny;
   final String meeting;
   final String whatsapp;
+  final String meetingPoint;
 
   final bool isGuest;
 
@@ -69,6 +71,8 @@ class CardCarona extends StatelessWidget {
             _buildStarsRate(),
             const SizedBox(height: 10),
             _buildLocation(destiny),
+            const SizedBox(height: 10),
+            _buildMeeting(meetingPoint),
             const SizedBox(height: 10),
             _buildWhatsApp(whatsapp),
           ],
@@ -156,6 +160,27 @@ class CardCarona extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: 'Destino: ',
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+        children: [
+          TextSpan(
+            text: location,
+            style: const TextStyle(
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMeeting(String? location) {
+    return RichText(
+      text: TextSpan(
+        text: 'Ponto de encontro: ',
         style: const TextStyle(
           color: Colors.black,
           fontSize: 16,
