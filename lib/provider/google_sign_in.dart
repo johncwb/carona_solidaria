@@ -14,12 +14,14 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  late GoogleSignInAccount userObj;
 
   Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    // final GoogleSignInAccount? _googleUser = await googleSignIn.signIn();
+    userGoogle = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
-        await googleUser!.authentication;
+        await userGoogle!.authentication;
     final OAuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
@@ -31,7 +33,7 @@ class GoogleSignInProvider extends ChangeNotifier {
     };
     db
         .collection('users')
-        .doc(googleUser.id)
+        .doc(userGoogle?.id)
         .set(data)
         .then((value) => debugPrint("Dados adicionados com sucesso!"))
         .catchError(
@@ -141,8 +143,8 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   Future saveUser(bool isDriver) async {
     final CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection('users');
-    collectionReference.doc(userGoogle!.id).set({
+        await FirebaseFirestore.instance.collection('users');
+    collectionReference.doc(userGoogle?.id).set({
       'id': userGoogle?.id,
       'name': userGoogle?.displayName,
       'isDriver': isDriver,
@@ -153,7 +155,6 @@ class GoogleSignInProvider extends ChangeNotifier {
       String color, String id) async {
     final CollectionReference collectionReference =
         FirebaseFirestore.instance.collection('users');
-    debugPrint("Modelo Carro :  $modeloCarro\nPlcaca : $placa\nCor : $color");
 
     collectionReference.doc(id).set({
       "Motorista": motorista,

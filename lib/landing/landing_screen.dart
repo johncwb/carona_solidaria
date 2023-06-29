@@ -4,6 +4,7 @@ import 'package:carona_solidaria/register/register_screen.dart';
 import 'package:carona_solidaria/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/button_widget.dart';
@@ -49,44 +50,79 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Widget _buildLoginButton() {
     return ButtonWidgets(
-      text: "Login ",
-      function: () async {
-        final provider =
-            Provider.of<GoogleSignInProvider>(context, listen: false);
-        provider.signInWithGoogle().then((userCredential) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/register', (route) => false);
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(
-                  isDriver: false,
-                  isUser: true,
-                ),
-              ),
-              (route) => false);
-        }).catchError((e) {
-          // Login falhou, exiba uma mensagem de erro
-          print(e);
-        });
+        text: "Login ",
+        function: () async {
+          final provider =
+              Provider.of<GoogleSignInProvider>(context, listen: false);
+
+          provider.signInWithGoogle().then((userCredential) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/register', (route) => false);
+
+            // Navigator.pushAndRemoveUntil(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => const HomeScreen(
+            //       isDriver: false,
+            //       isUser: true,
+            //     ),
+            //   ),
+            //   (route) => false,
+            // );
+          }).catchError((e) {
+            // Login falhou, exiba uma mensagem de erro
+            print(e);
+          });
+
+          // provider.signInWithGoogle().then((userCredential) {
+          //   Navigator.pushNamedAndRemoveUntil(
+          //       context, '/register', (route) => false);
+
+          // provider.googleSignIn.signIn().then((userData) {
+          //   setState(() {
+          //     provider.userObj = userData!;
+          //   });
+          // }).catchError((e) {
+          //   print(e);
+          // });
+        }
+
+        // provider.signInWithGoogle().then((userCredential) {
+        //   Navigator.pushNamedAndRemoveUntil(
+        //       context, '/register', (route) => false);
+
+        // Navigator.pushAndRemoveUntil(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const HomeScreen(
+        //       isDriver: false,
+        //       isUser: true,
+        //     ),
+        //   ),
+        //   (route) => false,
+        // );
+        // }).catchError((e) {
+        //   // Login falhou, exiba uma mensagem de erro
+        //   print(e);
+        // });
 
         // final provider =
         //     Provider.of<GoogleSignInProvider>(context, listen: false);
         // var login = await provider.signInWithGoogle();
-        var userGoogle = provider.userGoogle!.id;
+        // var userGoogle = provider.userGoogle!.id;
         // var val = await provider.checkCollectionExisting(userGoogle);
-        var collection = provider.db.collection('users');
-        var doc = collection.doc(userGoogle);
-        var getDoc = doc.get();
-        late String nome;
-        late bool isDriver;
-        getDoc.then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
-          if (snapshot.exists) {
-            Map<String, dynamic> data = snapshot.data()!;
-            nome = data['name'];
-            isDriver = data['isDriver'];
-          }
-        });
+        // var collection = provider.db.collection('users');
+        // var doc = collection.doc(userGoogle);
+        // var getDoc = doc.get();
+        // late String nome;
+        // late bool isDriver;
+        // getDoc.then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+        //   if (snapshot.exists) {
+        //     Map<String, dynamic> data = snapshot.data()!;
+        //     nome = data['name'];
+        //     isDriver = data['isDriver'];
+        //   }
+        // });
 
         // login.whenComplete(() {
         //   final user = provider.user;
@@ -135,8 +171,8 @@ class _LandingScreenState extends State<LandingScreen> {
         //         (route) => false);
         //   });
         // }
-      },
-    );
+        // },
+        );
   }
 
   // Widget _buildRegisterButton() {
