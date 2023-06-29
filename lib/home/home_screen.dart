@@ -54,6 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(12.0),
       children: const [
         CardCarona(isGuest: false),
+        CardCarona(isGuest: false),
+        CardCarona(isGuest: false),
+        CardCarona(isGuest: false),
+        CardCarona(isGuest: false),
       ],
     );
   }

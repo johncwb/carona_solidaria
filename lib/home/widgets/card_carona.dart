@@ -7,20 +7,23 @@ class CardCarona extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1.2,
-            blurRadius: 1.2,
-            offset: const Offset(2, 5),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1.2,
+              blurRadius: 1.2,
+              offset: const Offset(2, 5),
+            ),
+          ],
+        ),
+        child: _buildCardItens(),
       ),
-      child: _buildCardItens(),
     );
   }
 
@@ -33,16 +36,38 @@ class CardCarona extends StatelessWidget {
         children: [
           _buildName("Pedro Almeida"),
           const SizedBox(height: 10),
+          _buildStarsRate(),
+          const SizedBox(height: 10),
           _buildLocation("R. Buenos Aires, 1260 - Água Verde"),
         ],
       ),
     );
   }
 
-  Widget _buildName(String? name) {
+  Widget _buildStarsRate() {
+    return Row(
+      children: const [
+        Text(
+          "Avaliação: ",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Icon(Icons.star_rate),
+        Icon(Icons.star_rate),
+        Icon(Icons.star_rate),
+        Icon(Icons.star_rate),
+        Icon(Icons.star_rate),
+      ],
+    );
+  }
+
+  Widget _buildName([String? name]) {
     return RichText(
       text: TextSpan(
-        text: 'Nome: ',
+        text: 'Motorista: ',
         style: const TextStyle(
           color: Colors.black,
           fontSize: 16,
