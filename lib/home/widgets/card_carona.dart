@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CardCarona extends StatelessWidget {
-  const CardCarona(
-      {super.key,
-      required this.isGuest,
-      required this.name,
-      required this.destiny,
-      required this.meeting});
+  const CardCarona({
+    super.key,
+    required this.isGuest,
+    required this.name,
+    required this.destiny,
+    required this.meeting,
+    required this.whatsapp,
+  });
   final String name;
   final String destiny;
   final String meeting;
+  final String whatsapp;
 
   final bool isGuest;
+
+  void openWhatsApp(String phoneNumber) async {
+    String url = 'https://wa.me/+55$phoneNumber';
+    Uri uri = Uri.parse(url);
+    await _launchInBrowser(uri);
+  }
+
+  Future<void> _launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +56,23 @@ class CardCarona extends StatelessWidget {
   }
 
   Widget _buildCardItens() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildName(name),
-          const SizedBox(height: 10),
-          _buildStarsRate(),
-          const SizedBox(height: 10),
-          _buildLocation(destiny),
-        ],
+    return InkWell(
+      onTap: () => openWhatsApp(whatsapp),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildName(name),
+            const SizedBox(height: 10),
+            _buildStarsRate(),
+            const SizedBox(height: 10),
+            _buildLocation(destiny),
+            const SizedBox(height: 10),
+            _buildWhatsApp(whatsapp),
+          ],
+        ),
       ),
     );
   }
@@ -72,10 +97,44 @@ class CardCarona extends StatelessWidget {
     );
   }
 
+  Widget _buildWhatsApp(String number) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        RichText(
+          text: TextSpan(
+            text: 'WhatsAPP: ',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+            children: [
+              TextSpan(
+                text: number,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 10),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: FaIcon(
+            FontAwesomeIcons.whatsapp,
+            // color: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildName([String? name]) {
     return RichText(
       text: TextSpan(
-        text: 'Motorista: ',
+        text: 'Passageiro: ',
         style: const TextStyle(
           color: Colors.black,
           fontSize: 16,

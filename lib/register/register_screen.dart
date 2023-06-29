@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:carona_solidaria/model/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -139,6 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildRegisterButton() {
+    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     bool? isDriver;
     if (_selections[0]) {
       isDriver = true;
@@ -146,25 +151,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
       isDriver = false;
     }
     return InkWell(
-      onTap: () {
-        final provider =
-            Provider.of<GoogleSignInProvider>(context, listen: false);
-        var saveUser = provider.saveUser(isDriver!);
-        saveUser.whenComplete(() {
-          if (isDriver!) {
-            Navigator.pushNamed(context, '/registerCar');
-          } else {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(
-                    isDriver: isDriver,
-                    isUser: true,
+      onTap: () async {
+        try {
+          await provider.db.collection("users").get().then((event) {
+            List<ModelUsers> modelUsers = [];
+            final userId = provider.userGoogle!.id;
+            for (var doc in event.docs) {
+              print("${doc.id} => ${doc.data()}");
+              final users = ModelUsers.fromJson(doc.data());
+              modelUsers.add(users);
+              print(users.isDriver);
+            }
+            final usersId = modelUsers.where((element) => element.id == userId);
+            print("${usersId.first.isDriver}");
+          });
+        } catch (e) {
+          print(e);
+        }
+
+        try {
+          var saveUser = provider.saveUser(isDriver!);
+          saveUser.whenComplete(() {
+            if (isDriver!) {
+              Navigator.pushNamed(context, '/registerCar');
+            } else {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(
+                      isDriver: isDriver,
+                      isUser: true,
+                    ),
                   ),
-                ),
-                (route) => false);
-          }
-        });
+                  (route) => false);
+            }
+          });
+        } catch (e) {
+          log(e.toString());
+        }
       },
       child: Container(
         width: 275,

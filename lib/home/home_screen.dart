@@ -79,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 name: data['name'],
                 destiny: data['destiny'],
                 meeting: data['meetinPoint'],
+                whatsapp: data['phone'] ?? "",
               );
             }),
           );
