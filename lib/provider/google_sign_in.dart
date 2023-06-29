@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +8,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
 
-  GoogleSignInAccount? _user;
+  GoogleSignInAccount? userGoogle;
 
-  GoogleSignInAccount get user => _user!;
+  GoogleSignInAccount get user => userGoogle!;
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -17,7 +19,7 @@ class GoogleSignInProvider extends ChangeNotifier {
     //capturando dados do login
     final googleUser = await googleSignIn.signIn();
     if (googleUser == null) return;
-    _user = googleUser;
+    userGoogle = googleUser;
 
     final googleAuth = await googleUser.authentication;
 
@@ -25,45 +27,60 @@ class GoogleSignInProvider extends ChangeNotifier {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    debugPrint("acessToken: ${googleAuth.accessToken}");
-    debugPrint("idToken: ${googleAuth.idToken}");
-    CollectionReference collection =
-        FirebaseFirestore.instance.collection('users');
-    await collection.add(({
-      'id': _user?.id,
-      'name': _user?.displayName,
+
+    debugPrint("googleUserId: ${googleUser.id}");
+    Map<String, dynamic> data = {
+      'id': userGoogle?.id,
+      'name': userGoogle?.displayName,
       'isDriver': false,
-    }));
+    };
+
+    db
+        .collection('users')
+        .doc(googleUser.id)
+        .set(data)
+        .then((value) => debugPrint("Dados adicionados com sucesso!"))
+        .catchError(
+            (error) => debugPrint("Erro ao adicionar os dados: $error"));
+
     await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future googleRegister() async {
+  Future googleRegister(Function? fun) async {
     final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) return;
-    _user = googleUser;
 
-    final googleAuth = await googleUser.authentication;
+    bool exists = await checkCollectionExisting(googleUser!.id);
+    if (exists) {
+      fun!();
+    } else {
+      //capturando dados do login
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return;
+      userGoogle = googleUser;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    var id = db.collection(_user!.id);
-    // ignore: unnecessary_null_comparison
-    if (id == null) {
-      debugPrint("Usuário não encontrado");
-    }
+      final googleAuth = await googleUser.authentication;
 
-    await FirebaseAuth.instance.signInWithCredential(credential);
-    notifyListeners();
-  }
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-  Future validadeUser() async {
-    CollectionReference colletion =
-        FirebaseFirestore.instance.collection('Usuário');
-    QuerySnapshot querySnapshot = await colletion.get();
-    for (var e in querySnapshot.docs) {
-      debugPrint("Testando: ${e.id}");
+      debugPrint("googleUserId: ${googleUser.id}");
+      Map<String, dynamic> data = {
+        'id': userGoogle?.id,
+        'name': userGoogle?.displayName,
+        'isDriver': false,
+      };
+
+      db
+          .collection('users')
+          .doc(googleUser.id)
+          .set(data)
+          .then((value) => debugPrint("Dados adicionados com sucesso!"))
+          .catchError(
+              (error) => debugPrint("Erro ao adicionar os dados: $error"));
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
     }
   }
 
@@ -73,7 +90,23 @@ class GoogleSignInProvider extends ChangeNotifier {
     debugPrint("Usuário desconectado");
   }
 
-  Future updateUser([String? path]) async {
-    db.collection('');
+  Future<bool> checkCollectionExisting(String collectionName) async {
+    final CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection('users');
+    collectionReference.doc(collectionName);
+    final QuerySnapshot querySnapshot =
+        await collectionReference.limit(1).get();
+
+    return querySnapshot.size > 0;
+  }
+
+  Future saveUser(bool isDriver) async {
+    final CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection('users');
+    collectionReference.doc(userGoogle!.id).set({
+      'id': userGoogle?.id,
+      'name': userGoogle?.displayName,
+      'isDriver': false,
+    });
   }
 }

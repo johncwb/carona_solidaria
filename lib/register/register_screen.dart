@@ -29,11 +29,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             _buildLogo(),
             const SizedBox(height: 30),
+            _buildText(),
+            const SizedBox(height: 30),
             _buildOptions(),
             const SizedBox(height: 30),
             _buildRegisterButton(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildText() {
+    return const Text(
+      "Usará o aplicativo como: ",
+      style: TextStyle(
+        color: AppConstants.primaryColor,
+        fontSize: 18,
+        fontWeight: FontWeight.w400,
       ),
     );
   }

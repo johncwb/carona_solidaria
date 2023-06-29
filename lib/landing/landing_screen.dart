@@ -1,6 +1,8 @@
 import 'package:carona_solidaria/home/home_screen.dart';
 import 'package:carona_solidaria/provider/google_sign_in.dart';
+import 'package:carona_solidaria/register/register_screen.dart';
 import 'package:carona_solidaria/utils/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,27 +50,53 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget _buildLoginButton() {
     return ButtonWidgets(
       text: "Login ",
-      function: () {
+      function: () async {
         final provider =
             Provider.of<GoogleSignInProvider>(context, listen: false);
         var login = provider.googleLogin();
-
-        login.whenComplete(() {
-          final user = provider.user;
-          bool isUser = false;
-          if (user.id.isNotEmpty) {
-            isUser = true;
+        var userGoogle = provider.userGoogle!.id;
+        var val = await provider.checkCollectionExisting(userGoogle);
+        var collection = provider.db.collection('users');
+        var doc = collection.doc(userGoogle);
+        var getDoc = doc.get();
+        late String nome;
+        late bool isDriver;
+        getDoc.then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+          if (snapshot.exists) {
+            Map<String, dynamic> data = snapshot.data()!;
+            nome = data['name'];
+            isDriver = data['isDriver'];
+            debugPrint("Nome: $nome\nisDriver: $isDriver");
           }
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(
-                  isDriver: false,
-                  isUser: isUser,
-                ),
-              ),
-              (route) => false);
         });
+
+        if (val) {
+          login.whenComplete(() {
+            final user = provider.user;
+            bool isUser = false;
+            if (user.id.isNotEmpty) {
+              isUser = true;
+            }
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(
+                    isDriver: isDriver,
+                    isUser: isUser,
+                  ),
+                ),
+                (route) => false);
+          });
+        } else {
+          login.whenComplete(() {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RegisterScreen(),
+                ),
+                (route) => false);
+          });
+        }
       },
     );
   }
@@ -77,11 +105,15 @@ class _LandingScreenState extends State<LandingScreen> {
     return ButtonWidgets(
       text: "Registrar",
       function: () {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/register',
-          (route) => false,
-        );
+        final provider =
+            Provider.of<GoogleSignInProvider>(context, listen: false);
+        provider.googleRegister(() {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/register',
+            (route) => false,
+          );
+        });
       },
     );
   }
