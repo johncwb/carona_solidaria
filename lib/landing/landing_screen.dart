@@ -77,15 +77,17 @@ class _LandingScreenState extends State<LandingScreen> {
             if (user.id.isNotEmpty) {
               isUser = true;
             }
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(
-                    isDriver: isDriver,
-                    isUser: isUser,
-                  ),
-                ),
-                (route) => false);
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/register', (route) => false);
+            // Navigator.pushAndRemoveUntil(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => HomeScreen(
+            //         isDriver: isDriver,
+            //         isUser: isUser,
+            //       ),
+            //     ),
+            //     (route) => false);
           });
         } else {
           login.whenComplete(() {

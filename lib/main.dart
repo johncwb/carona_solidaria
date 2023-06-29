@@ -1,7 +1,7 @@
 import 'package:carona_solidaria/create_trip/create_trip.dart';
 import 'package:carona_solidaria/home/home_screen.dart';
-import 'package:carona_solidaria/login/login_screen.dart';
 import 'package:carona_solidaria/provider/google_sign_in.dart';
+import 'package:carona_solidaria/register/register_car_screen.dart';
 import 'package:carona_solidaria/services/auth_service.dart';
 import 'package:carona_solidaria/splash/splash_screen.dart';
 import 'package:carona_solidaria/utils/no_connection.dart';
@@ -54,9 +54,9 @@ class MyApp extends StatelessWidget {
           '/noConnection': (context) => const NoConnection(),
           '/authCheck': (context) => const AuthCheck(),
           '/landing': (context) => const LandingScreen(),
-          '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
           '/createTrip': (context) => const CreateTrip(),
+          '/registerCar': (context) => const RegisterCarScreen(),
         },
       ),
     );

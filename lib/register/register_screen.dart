@@ -151,15 +151,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Provider.of<GoogleSignInProvider>(context, listen: false);
         var saveUser = provider.saveUser(isDriver!);
         saveUser.whenComplete(() {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(
-                  isDriver: isDriver,
-                  isUser: true,
+          if (isDriver!) {
+            Navigator.pushNamed(context, '/registerCar');
+          } else {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(
+                    isDriver: isDriver,
+                    isUser: true,
+                  ),
                 ),
-              ),
-              (route) => false);
+                (route) => false);
+          }
         });
       },
       child: Container(

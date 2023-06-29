@@ -81,6 +81,7 @@ class _CreateTripState extends State<CreateTrip> {
         ),
         const SizedBox(height: 32),
         CreateButton(
+          text: "Criar Viagem",
           onTap: () {
             final provider =
                 Provider.of<GoogleSignInProvider>(context, listen: false);

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../../utils/constants.dart';
 
 class CreateButton extends StatefulWidget {
-  const CreateButton({super.key, this.onTap});
+  const CreateButton({super.key, this.onTap, this.text});
   final Function? onTap;
+  final String? text;
 
   @override
   State<CreateButton> createState() => _CreateButtonState();
@@ -25,10 +26,10 @@ class _CreateButtonState extends State<CreateButton> {
           ),
           borderRadius: BorderRadius.circular(110),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
-            "Criar Viagem",
-            style: TextStyle(
+            widget.text!,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w500,

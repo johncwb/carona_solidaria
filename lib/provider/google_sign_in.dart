@@ -127,7 +127,21 @@ class GoogleSignInProvider extends ChangeNotifier {
     collectionReference.doc(userGoogle!.id).set({
       'id': userGoogle?.id,
       'name': userGoogle?.displayName,
-      'isDriver': false,
+      'isDriver': isDriver,
+    });
+  }
+
+  Future saveCar(String motorista, String modeloCarro, String placa,
+      String color, String id) async {
+    final CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection('users');
+    debugPrint("Modelo Carro :  $modeloCarro\nPlcaca : $placa\nCor : $color");
+
+    collectionReference.doc(id).set({
+      "Motorista": motorista,
+      "modeloCarro": modeloCarro,
+      "placa": placa,
+      "corDoCarro": color,
     });
   }
 }
