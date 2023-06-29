@@ -1,3 +1,4 @@
+import 'package:carona_solidaria/home/home_screen.dart';
 import 'package:carona_solidaria/provider/google_sign_in.dart';
 import 'package:carona_solidaria/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,24 @@ class _LandingScreenState extends State<LandingScreen> {
       function: () {
         final provider =
             Provider.of<GoogleSignInProvider>(context, listen: false);
-        provider.googleLogin();
+        var login = provider.googleLogin();
+
+        login.whenComplete(() {
+          final user = provider.user;
+          bool isUser = false;
+          if (user.id.isNotEmpty) {
+            isUser = true;
+          }
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(
+                  isDriver: false,
+                  isUser: isUser,
+                ),
+              ),
+              (route) => false);
+        });
       },
     );
   }
@@ -71,9 +89,14 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget _buildguestButton() {
     return InkWell(
       onTap: () {
-        Navigator.pushNamedAndRemoveUntil(
+        Navigator.pushAndRemoveUntil(
           context,
-          '/home',
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(
+              isDriver: false,
+              isUser: false,
+            ),
+          ),
           (route) => false,
         );
       },

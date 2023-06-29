@@ -1,24 +1,34 @@
 import 'package:carona_solidaria/home/widgets/card_carona.dart';
+import 'package:carona_solidaria/landing/landing_screen.dart';
 import 'package:carona_solidaria/profile/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/constants.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
-  const HomeScreen(
-      {super.key, required this.isUser, required this.isMotorista});
+  const HomeScreen({
+    super.key,
+    required this.isDriver,
+    required this.isUser,
+  });
+  final bool? isDriver;
   final bool isUser;
-  final bool isMotorista;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late final user = FirebaseAuth.instance.currentUser!;
+  late final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
+    // final arguments =
+    //     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    // final isUser = arguments['isUser'] ?? true;
+    // final isDriver = arguments['isDriver'] ?? true;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -53,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
       title: _buildTitleLogged(),
       leading: CircleAvatar(
         radius: 20,
-        backgroundImage: NetworkImage(user.photoURL!),
+        backgroundImage: NetworkImage(user!.photoURL!),
       ),
     );
   }
@@ -65,19 +75,39 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTitlleGuest() {
-    return const Text(
-      "Olá, convidado",
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          "Olá, convidado",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LandingScreen(),
+              ),
+              (route) => false,
+            );
+          },
+          icon: const Icon(
+            Icons.logout,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildTitleLogged() {
     return Text(
-      "Olá, ${user.displayName}",
+      "Olá, ${user!.displayName!}",
       style: const TextStyle(
         color: Colors.white,
         fontSize: 16,

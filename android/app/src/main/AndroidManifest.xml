@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
    <application
-        android:label="Carona Solidária Manifest"
+        android:label="Carona Solidária"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

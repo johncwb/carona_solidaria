@@ -1,6 +1,7 @@
 import 'package:carona_solidaria/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:carona_solidaria/model/user_model.dart';
 
 class AuthCheck extends StatefulWidget {
   const AuthCheck({super.key});
@@ -23,9 +24,10 @@ class _AuthCheckState extends State<AuthCheck> {
             debugPrint("Load data sucessful!!");
             debugPrint("Name: ${snapshot.data!.displayName}");
             debugPrint("E-mail: ${snapshot.data!.email}");
+            debugPrint("${snapshot.data}");
             return const HomeScreen(
+              isDriver: false,
               isUser: true,
-              isMotorista: true,
             );
           } else if (snapshot.hasError) {
             debugPrint("Error on load data!");

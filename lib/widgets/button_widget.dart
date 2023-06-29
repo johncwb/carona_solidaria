@@ -21,12 +21,15 @@ class ButtonWidgets extends StatelessWidget {
         child: Container(
           width: 200,
           decoration: BoxDecoration(
+            color: const Color(0xff113d63),
+            border: Border.all(
+              width: 3,
               color: const Color(0xff113d63),
-              border: Border.all(
-                width: 3,
-                color: const Color(0xff113d63),
-              ),
-              borderRadius: const BorderRadius.all(Radius.circular(20.0))),
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(20.0),
+            ),
+          ),
           // color: const Color(0xff113d63),
           height: 55,
           child: Row(
